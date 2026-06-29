@@ -25,6 +25,9 @@ async def get_movies(
     total_pages = ceil(total_items / per_page)
     offset = (page - 1) * per_page
 
+    if offset >= total_items:
+        raise HTTPException(status_code=404, detail="No movies found.")
+
     result = await db.execute(select(MovieModel).offset(offset).limit(per_page))
     movies = result.scalars().all()
 
